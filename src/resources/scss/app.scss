@@ -1,0 +1,33 @@
+@import "variables";
+
+// h1{
+//     color: $red;
+// }
+
+.header{
+    display: flex;
+    height: 80px;
+    width: 100%;
+    background-color: black;
+    padding-left: 100px;
+    align-items: center;
+}
+
+.header > .title{
+    font-size: 30px;
+    color: white;
+}
+
+.footer{
+    display: flex;
+    height: 60px;
+    width: 100%;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer > .title{
+    font-size: 24px;
+    color: white;
+}
