@@ -2,13 +2,24 @@
 const handlebars = require('express-handlebars');
 const path = require('path');
 const express = require('express'); // Nạp thư viên express vào bằng lệnh require
+const methodOverride = require('method-override')
 const morgan = require('morgan');
 const app = express();// Tạo ra biến app, gán app = express(), express() sẽ trả về 1 đối tượng 
 //tượng trưng cho ứng dụng của ta, app sẽ được dùng để cấu hình và xử lý những yêu ầu HTTP trong ứng dụng
 
 const port = 5000 ;// Định nghĩa số cổng mà ứng dụng sẽ lắng nghe để tiếp nhận các yêu cầu HTTP từ trình duyệt web hoặc ứng dụng khác
 
-const route = require('./routes')
+app.use(methodOverride('_method'))
+app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')))
+app.use('/css', express.static(path.join(__dirname, './resources/scss/app.scss')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')))
+app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')))
+
+const route = require('./routes');
+const db = require('./config/db');
+
+//Connect db
+db.connect();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -22,7 +33,12 @@ app.use(express.json({
 
 // app.use(morgan('combined'));
 
-const hbs = handlebars.create({extname: '.hbs'});
+const hbs = handlebars.create({
+  extname: '.hbs',
+  helpers: {
+    sum(a, b) { return a + b; },
+  }
+});
 app.engine('hbs', hbs.engine);
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources','views'));

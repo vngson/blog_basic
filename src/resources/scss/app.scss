@@ -4,10 +4,45 @@
 //     color: $red;
 // }
 
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html{
+    font-size: 10px;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    background-color: var(--white) !important;
+    user-select: none !important;
+  }
+  
+  button{
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  Link, buttonm, a{
+    text-decoration: none !important;
+  }
+  
+  button,
+  input,
+  [tabindex] {
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
 .header{
     display: flex;
     height: 80px;
-    width: 100%;
     background-color: black;
     padding-left: 100px;
     align-items: center;

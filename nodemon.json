@@ -1,3 +1,9 @@
 {
-    "ext":"js json scss hbs"
+    "ext":"js json scss hbs",
+    "verbose": true,
+    "ignore": ["*.test.js", "**/fixtures/**"],
+    "execMap": {
+        "rb": "ruby",
+        "pde": "processing --sketch={{pwd}} --run"
+    }
 }

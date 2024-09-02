@@ -4,9 +4,10 @@
   "description": "",
   "main": "src/index.js",
   "scripts": {
-    "start": "nodemon --inspect src/index.js",
+    "start": "node --inspect src/index.js",
     "watch": "node-sass --watch src/resources/scss/app.scss -o src/public/css --include-path src/resources/scss",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch src --ext js,json --ignore node_modules/ --inspect src/index.js"
   },
   "repository": {
     "type": "git",
@@ -23,12 +24,30 @@
   },
   "homepage": "https://github.com/vngson/blog_basic#readme",
   "dependencies": {
+    "@primer/octicons": "^19.11.0",
+    "bootstrap": "^5.3.3",
     "express": "^4.18.2",
-    "express-handlebars": "^7.1.2"
+    "express-handlebars": "^7.1.2",
+    "jquery": "^3.7.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^6.10.0",
+    "mongoose-delete": "^1.0.2",
+    "mongoose-slug-generator": "^1.0.4",
+    "mongoose-softdelete": "^1.2.0"
   },
   "devDependencies": {
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "morgan": "^1.10.0",
     "node-sass": "^9.0.0",
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.4",
+    "prettier": "^3.2.5"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/test/**",
+      "**/docs/**"
+    ],
+    "delay": 2500
   }
 }

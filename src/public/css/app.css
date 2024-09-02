@@ -1,36 +1,89 @@
-.header{
-  display: flex;
-  height: 80px;
-  width: 100%;
-  background-color: black;
-  padding-left: 100px;
-  align-items: center;
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html{
+    font-size: 16px;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    background-color: var(--white) !important;
+    user-select: none !important;
+  }
+  
+  button{
+    user-select: none;
+    cursor: pointer;
+  }
+  
+  Link, buttonm, a{
+    text-decoration: none !important;
+  }
+  
+  button,
+  input,
+  [tabindex] {
+    border: none;
+    outline: none;
+    cursor: pointer;
+  }
+
+.user-avatar{
+  height: 30px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: none;
+  margin-right: 10px;
 }
 
-.header > .title{
-  font-size: 30px;
-  color: white;
-  text-transform: uppercase;
+.nav{
+  align-items: center !important;
+}
+
+.container > a, .nav-item > a{
+    color: white !important;
 }
 
 .footer{
-  display: flex;
-  height: 60px;
-  width: 100%;
-  background-color: black;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    height: 60px;
+    width: 100%;
+    background-color: black;
+    align-items: center;
+    justify-content: center;
 }
 
 .footer > .title{
-  font-size: 24px;
-  color: white;
-  text-transform: uppercase;
+    font-size: 24px;
+    color: white;
 }
 
-.container{
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 100px;
+.checkbox-select-all-options{
+  width: 200px !important;
+}
+
+.form-checkbox-all{
+  gap: 20px;
+}
+
+.table thead th{
+  align-items: center !important;
+}
+
+.sort-icons i {
+  cursor: pointer;
+  color: #ddd; /* Màu xám khi không được chọn */
+}
+
+.sort-icons i.active {
+  color: #000; /* Màu đen khi được chọn */
+}
+
+.sort-icons i.inactive {
+  color: #ddd; /* Màu xám khi không được chọn */
 }

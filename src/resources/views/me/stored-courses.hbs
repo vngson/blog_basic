@@ -1,0 +1,225 @@
+<form class="mt-4 " name="container-form" method="POST" action="/courses/handle-form-actions">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Khóa học của tôi</h2>
+        <div class="d-flex align-items-center">
+            <a href="/me/recycled/courses" class="text-dark mr-5">
+                <i class="fa fa-trash-o"></i>
+                Thùng rác
+                <span class="badge badge-light ml-1">{{ countDeleted }}</span>
+            </a>
+            <a href="/courses/create" class="text-dark">
+                <i class="fa fa-plus"></i>
+                Tạo khóa học
+            </a>
+        </div>
+    </div>
+    <div class="mt-4 d-flex align-items-center form-checkbox-all">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="" id="checkbox-all">
+            <label class="form-check-label" for="checkbox-all">
+                Chọn tất cả
+            </label>
+        </div>
+        <select class="custom-select form-control-sm checkbox-select-all-options" name="action" id="action-select" required>
+            <option value="" selected>-- Chọn hành động --</option>
+            <option value="restore">Khôi phục</option>
+            <option value="force">Xóa vĩnh viễn</option>
+        </select>
+        <button class="btn btn-primary btn-sm disabled all-submit-btn" id="apply-btn">Áp dụng</button>
+    </div>
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">
+                    <div class="d-flex align-items-center">
+                        <span class="align-center-text">Tên khóa học</span>
+                        <span  class="ml-2 sort-icons d-inline-flex flex-column align-items-center" data-sort="name" data-order="asc">
+                            <i class="fa fa-sort-up inactive"></i>
+                            <i class="fa fa-sort-down inactive"></i>
+                        </span>
+                    </div>
+                </th>
+                <th scope="col">
+                    <div class="d-flex align-items-center">
+                        <span class="align-center-text">Trình độ</span>
+                        <span  class="ml-2 sort-icons d-inline-flex flex-column align-items-center" data-sort="level" data-order="asc">
+                            <i class="fa fa-sort-up inactive"></i>
+                            <i class="fa fa-sort-down inactive"></i>
+                        </span>
+                    </div>
+                </th>
+                <th scope="col">Thời gian tạo</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each courses}}
+            <tr>
+                <td>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="courseIds[]" value="{{ this._id }}" id="defaultCheck1">
+                    </div>
+                </td>
+                {{!-- <th scope="row">{{sum @index 1}}</th> --}}
+                <td>{{ this.name }}</td>
+                <td>{{ this.level }}</td>
+                <td>{{ this.createdAt }}</td>
+                <td>
+                    <a href="/courses/update/{{this._id}}" class="btn btn-outline-primary mr-2">Cập nhật</a>
+                    <a href="" data-bs-toggle="modal" data-bs-target="#delete-course-modal" data-id="{{ this._id }}" class="btn btn-outline-danger">Xóa</a>
+                    
+                </td>
+            </tr>
+            {{else}}
+            <tr>
+                <td colspan="5" class="text-center">
+                    Bạn chưa đăng khóa học nào. <a href="/courses/create">Đăng khóa học</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</form>
+
+<div class="modal fade" id="delete-course-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5 text-center" id="exampleModalLabel">Xác nhận xóa khóa học</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Bạn có chắc chắn muốn xóa khóa học này?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button id="btn-delete-course" type="button" class="btn btn-danger">Xóa</button>
+        </div>
+        </div>
+    </div>
+</div>
+
+{{!-- form delete course --}}
+
+    <form method="POST" name="delete-course-form" action=""></form>
+
+<script>
+
+    var courseId;
+    var btnDeleteCourse = document.getElementById("btn-delete-course");
+    var deleteCourseForm = document.forms["delete-course-form"];
+    var containerForm = document.forms["container-form"];
+
+    document.addEventListener('DOMContentLoaded', function(event) {
+        $('#delete-course-modal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget) // Button that triggered the modal
+            courseId = button.data('id') // Extract info from data-* attributes
+        })
+
+        var allCheckbox = $("#checkbox-all");
+        var courseItemCheckbox = $('input[name="courseIds[]"]');
+        var checkAllSubmitbtn = $('.all-submit-btn');
+
+        btnDeleteCourse.onclick = function() {
+            deleteCourseForm.action = "/courses/delete/"+courseId+"?_method=DELETE";
+            deleteCourseForm.submit();
+        }
+
+        //Checkbox all item
+        allCheckbox.change(function (){
+            var isCheckedAll = $(this).prop('checked');
+            courseItemCheckbox.prop('checked', isCheckedAll);
+            renderCheckAllSumbitBtn();
+        });
+
+        //Course item checkbox
+        courseItemCheckbox.change(function(){
+            var isAllChecked = courseItemCheckbox.filter(':checked').length === courseItemCheckbox.length;
+            allCheckbox.prop('checked', isAllChecked);
+            renderCheckAllSumbitBtn();
+        });
+
+        //Check all submit btn click
+        checkAllSubmitbtn.click(function(e){
+            e.preventDefault();
+
+            var isSubmittable = !$(this).hasClass('disabled');
+            if(isSubmittable){
+                containerForm.submit();
+            }
+        });
+
+        checkAllSubmitbtn.on('submit', function(e){
+            var isSubmittable = !$(this).hasClass('disabled');
+            if(!isSubmittable){
+                e.preventDefault();
+            }
+        })
+
+        //Re-render check all submit btn
+        function renderCheckAllSumbitBtn() {
+            var isAllChecked = courseItemCheckbox.filter(':checked').length;
+            if(isAllChecked > 0){
+                checkAllSubmitbtn.removeClass('disabled');
+            } else{
+                checkAllSubmitbtn.addClass('disabled');
+            }
+        }
+
+        $('.sort-icons').on('click', function() {
+            var sortBy = $(this).data('sort'); // Lấy trường cần sắp xếp (name hoặc level)
+            var sortOrder = $(this).data('order'); // Lấy chiều sắp xếp (asc hoặc desc)
+            
+            // Thực hiện sắp xếp
+            sortCourses(sortBy, sortOrder);
+            
+            // Đảo ngược chiều sắp xếp cho lần nhấn tiếp theo
+            var newOrder = sortOrder === 'asc' ? 'desc' : 'asc';
+            $(this).data('order', newOrder);
+
+            // Cập nhật icon hiển thị
+            updateSortIcons($(this), sortOrder);
+        });
+
+        function updateSortIcons(sortElement, sortOrder) {
+            var upIcon = sortElement.find('.fa-sort-up');
+            var downIcon = sortElement.find('.fa-sort-down');
+
+            // Reset tất cả các icon khác
+            $('.sort-icons i').removeClass('active').addClass('inactive');
+
+            if (sortOrder === 'asc') {
+                upIcon.addClass('active').removeClass('inactive');
+                downIcon.removeClass('active').addClass('inactive');
+            } else {
+                upIcon.removeClass('active').addClass('inactive');
+                downIcon.addClass('active').removeClass('inactive');
+            }
+        }
+
+        function sortCourses(sortBy, sortOrder) {
+            var rows = $('tbody tr').get();
+
+            rows.sort(function(a, b) {
+                var A = $(a).children('td').eq(sortBy === 'name' ? 1 : 2).text().toUpperCase();
+                var B = $(b).children('td').eq(sortBy === 'name' ? 1 : 2).text().toUpperCase();
+                
+                if (A < B) {
+                    return sortOrder === 'asc' ? -1 : 1;
+                }
+                if (A > B) {
+                    return sortOrder === 'asc' ? 1 : -1;
+                }
+                return 0;
+            });
+
+            $.each(rows, function(index, row) {
+                $('tbody').append(row);
+            });
+        }
+    })
+
+    
+
+</script>
